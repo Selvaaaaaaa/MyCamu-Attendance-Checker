@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
         <header class="header">
@@ -24,7 +26,16 @@
                     <label for="periods-present">Number of Periods Present</label>
                     <input type="number" id="periods-present" placeholder="e.g., 45" required>
                 </div>
-                <button type="submit" class="btn">Calculate My Percentage</button>
+
+                <div class="button-group">
+                    <button type="button" id="btn-present" class="btn">Add Present Day (+8)</button>
+                    <button type="button" id="btn-absent" class="btn">Add Absent Day (+0)</button>
+                    <button type="button" id="btn-undo" class="btn">Undo Last Entry</button>
+                    <button type="button" id="btn-reset" class="btn">Reset All</button>
+                </div>
+
+                <!-- Hidden calculate button as it will be auto-triggered, but keeping it in DOM just in case or we can just remove it from view but keep logic -->
+                <button type="submit" class="btn" style="display: none;">Calculate My Percentage</button>
             </form>
         </main>
         <section>
@@ -36,4 +47,5 @@
     </div>
     <script src="script.js"></script>
 </body>
+
 </html>

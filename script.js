@@ -1,27 +1,120 @@
-document.getElementById('attendance-form').addEventListener('submit', function(event) {
-    event.preventDefault();
+// State initialization
+let totalPeriods = 0;
+let periodsPresent = 0;
+let historyStack = [];
+
+// Remove local storage references - logic is now session-only
+
+// Update UI inputs from state
+function updateDisplay() {
+    document.getElementById('total-periods').value = totalPeriods;
+    document.getElementById('periods-present').value = periodsPresent;
+}
+
+// Update state from UI inputs (Manual Typing)
+function updateStateFromInput() {
+    const totalInput = parseFloat(document.getElementById('total-periods').value);
+    const presentInput = parseFloat(document.getElementById('periods-present').value);
+
+    // Update state if valid numbers, otherwise default to 0 for internal calculations
+    totalPeriods = isNaN(totalInput) ? 0 : totalInput;
+    periodsPresent = isNaN(presentInput) ? 0 : presentInput;
+
+    // Clear history because manual typing breaks the linear undo chain
+    if (historyStack.length > 0) {
+        historyStack = [];
+        // We could notify user that history is cleared, but let's keep it silent/implicit for now as per minimal requests
+    }
+
+    calculatePercentage();
+}
+
+// Calculate percentage logic
+function calculatePercentage() {
     const resultDiv = document.getElementById('result');
-    resultDiv.style.display = 'none'; // Hide before calculation
-    showResult();
+
+    if (totalPeriods === 0) {
+        resultDiv.style.display = 'none';
+        return;
+    }
+
+    const result = (periodsPresent / totalPeriods) * 100;
+    const roundedResult = Math.round(result);
+
+    resultDiv.textContent = `Overall percentage: ${roundedResult}%`;
+    resultDiv.style.display = 'inline-block';
+}
+
+// Button Actions
+document.getElementById('btn-present').addEventListener('click', function () {
+    // Ensure we start from current input values if they were just typed
+    const totalInput = parseFloat(document.getElementById('total-periods').value);
+    if (!isNaN(totalInput)) totalPeriods = totalInput;
+
+    const presentInput = parseFloat(document.getElementById('periods-present').value);
+    if (!isNaN(presentInput)) periodsPresent = presentInput;
+
+    totalPeriods += 8;
+    periodsPresent += 8;
+    historyStack.push('P');
+    updateDisplay();
+    calculatePercentage();
 });
 
-function showResult() {
-    const totalPeriods = parseFloat(document.getElementById('total-periods').value);
-    const periodsPresent = parseFloat(document.getElementById('periods-present').value);
-    const resultDiv = document.getElementById('result');
+document.getElementById('btn-absent').addEventListener('click', function () {
+    // Sync first
+    const totalInput = parseFloat(document.getElementById('total-periods').value);
+    if (!isNaN(totalInput)) totalPeriods = totalInput;
 
-    if (!isNaN(totalPeriods) && totalPeriods !== 0 && !isNaN(periodsPresent)) {
-        if (periodsPresent > totalPeriods) {
-            resultDiv.textContent = 'Periods present cannot be greater than total periods.';
-            resultDiv.style.display = 'inline-block';
-            return;
-        }
-        const result = (periodsPresent / totalPeriods) * 100;
-        const roundedResult = Math.round(result);
-        resultDiv.textContent = `Overall percentage: ${roundedResult}%`;
-        resultDiv.style.display = 'inline-block';
-    } else {
-        resultDiv.textContent = 'Please enter valid numbers (total periods must not be zero).';
-        resultDiv.style.display = 'inline-block';
+    const presentInput = parseFloat(document.getElementById('periods-present').value);
+    if (!isNaN(presentInput)) periodsPresent = presentInput;
+
+    totalPeriods += 8;
+    periodsPresent += 0;
+    historyStack.push('A');
+    updateDisplay();
+    calculatePercentage();
+});
+
+document.getElementById('btn-undo').addEventListener('click', function () {
+    if (historyStack.length === 0) {
+        alert("Nothing to undo! (History is cleared if you edit manually)");
+        return;
     }
-}
+
+    const lastAction = historyStack.pop();
+
+    if (lastAction === 'P') {
+        totalPeriods -= 8;
+        periodsPresent -= 8;
+    } else if (lastAction === 'A') {
+        totalPeriods -= 8;
+        // periodsPresent -= 0; 
+    }
+
+    // Safety check
+    if (totalPeriods < 0) totalPeriods = 0;
+    if (periodsPresent < 0) periodsPresent = 0;
+
+    updateDisplay();
+    calculatePercentage();
+});
+
+document.getElementById('btn-reset').addEventListener('click', function () {
+    if (confirm("Are you sure you want to reset all data?")) {
+        totalPeriods = 0;
+        periodsPresent = 0;
+        historyStack = [];
+        updateDisplay();
+        document.getElementById('result').style.display = 'none';
+    }
+});
+
+// Manual Input Listeners
+document.getElementById('total-periods').addEventListener('input', updateStateFromInput);
+document.getElementById('periods-present').addEventListener('input', updateStateFromInput);
+
+// Initialize (just start fresh)
+updateDisplay();
+
+
