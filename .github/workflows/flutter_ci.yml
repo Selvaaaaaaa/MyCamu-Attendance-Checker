@@ -33,8 +33,15 @@ jobs:
 
       - name: Scaffolding missing platform directories
         run: flutter create --org com.attendance.camu --project-name camu_attendance .
-        # This will create 'android', 'ios' and other folders needed to build the APK 
-        # since they were not generated locally.
+
+      - name: Update Kotlin Version
+        run: |
+          if [ -f "android/settings.gradle" ]; then
+            sed -i -E 's/id "org.jetbrains.kotlin.android" version "[0-9\.]*" apply false/id "org.jetbrains.kotlin.android" version "1.9.24" apply false/g' android/settings.gradle
+          fi
+          if [ -f "android/build.gradle" ]; then
+            sed -i 's/ext.kotlin_version =.*/ext.kotlin_version = "1.9.24"/g' android/build.gradle
+          fi
 
       - name: Install Dependencies
         run: flutter pub get
