@@ -32,7 +32,7 @@ jobs:
         run: flutter --version
 
       - name: Scaffolding missing platform directories
-        run: flutter create --org com.attendance.camu .
+        run: flutter create --org com.attendance.camu --project-name camu_attendance .
         # This will create 'android', 'ios' and other folders needed to build the APK 
         # since they were not generated locally.
 
