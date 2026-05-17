@@ -19,23 +19,22 @@
         <main>
             <form id="attendance-form" class="attendance-form">
                 <div class="form-group">
-                    <label for="total-periods">Total Number of Periods</label>
+                    <label for="total-periods">📚 Total Periods</label>
                     <input type="number" id="total-periods" placeholder="e.g., 50" required>
                 </div>
                 <div class="form-group">
-                    <label for="periods-present">Number of Periods Present</label>
+                    <label for="periods-present">✅ Periods Present</label>
                     <input type="number" id="periods-present" placeholder="e.g., 45" required>
                 </div>
 
                 <div class="button-group">
-                    <button type="button" id="btn-present" class="btn">Add Present Day (+8)</button>
-                    <button type="button" id="btn-absent" class="btn">Add Absent Day (+0)</button>
-                    <button type="button" id="btn-undo" class="btn">Undo Last Entry</button>
-                    <button type="button" id="btn-reset" class="btn">Reset All</button>
+                    <button type="button" id="btn-present" class="btn">✅ Present<br><small>+8</small></button>
+                    <button type="button" id="btn-absent" class="btn">❌ Absent<br><small>+8 Total</small></button>
+                    <button type="button" id="btn-undo" class="btn">↶ Undo</button>
+                    <button type="button" id="btn-reset" class="btn">🔄 Reset</button>
                 </div>
 
-                <!-- Hidden calculate button as it will be auto-triggered, but keeping it in DOM just in case or we can just remove it from view but keep logic -->
-                <button type="submit" class="btn" style="display: none;">Calculate My Percentage</button>
+                <button type="submit" class="btn" style="display: none;"></button>
             </form>
         </main>
         <section>

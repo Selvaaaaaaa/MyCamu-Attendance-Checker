@@ -41,8 +41,28 @@ function calculatePercentage() {
     const result = (periodsPresent / totalPeriods) * 100;
     const roundedResult = Math.round(result);
 
-    resultDiv.textContent = `Overall percentage: ${roundedResult}%`;
-    resultDiv.style.display = 'inline-block';
+    // Determine status and emoji based on percentage
+    let status = '';
+    let statusEmoji = '';
+    let statusClass = '';
+
+    if (roundedResult >= 75) {
+        status = '✓ Great! You\'re safe';
+        statusEmoji = '🎉';
+        statusClass = 'safe';
+    } else if (roundedResult >= 60) {
+        status = '⚠ Warning: Attendance is low';
+        statusEmoji = '⚠️';
+        statusClass = 'warning';
+    } else {
+        status = '✗ Critical: At risk of being debarred';
+        statusEmoji = '🚨';
+        statusClass = 'danger';
+    }
+
+    resultDiv.className = `result ${statusClass}`;
+    resultDiv.innerHTML = `<div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${statusEmoji}</div><div style="font-size: 1.1rem; margin-bottom: 0.5rem;">Overall Attendance</div><div style="font-size: 2.2rem; font-weight: 700;">${roundedResult}%</div><div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.9;">${status}</div>`;
+    resultDiv.style.display = 'block';
 }
 
 // Button Actions
